@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gonçalo de Azevedo — Vox Humana / A Voz Humana</title>
+<meta name="description" content="Vox Humana (A Voz Humana), romance histórico-gótico de Gonçalo de Azevedo. Braga, 1762 e 2025 — um órgão selado, quarenta e nove tubos, e a prova de quarenta e nove vozes roubadas. Disponível em português, inglês, espanhol, francês e alemão.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c1a16;
+    --paper:#f7f3ea;
+    --paper-2:#efe8d8;
+    --accent:#6b3a2a;
+    --accent-2:#8a6d3f;
+    --line:#d8cdb2;
+    --muted:#6b6457;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"EB Garamond", Georgia, "Times New Roman", serif;
+    font-size:19px;
+    line-height:1.6;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 24px}
+  header.hero{
+    padding:90px 24px 70px;
+    text-align:center;
+    background:
+      radial-gradient(ellipse at top, rgba(107,58,42,0.08), transparent 60%),
+      var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  .kicker{
+    font-family:"EB Garamond", serif;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-size:13px;
+    color:var(--accent-2);
+    margin-bottom:18px;
+  }
+  h1.title{
+    font-family:"Cormorant Garamond", serif;
+    font-weight:600;
+    font-size:clamp(42px,7vw,72px);
+    line-height:1.05;
+    margin:0 0 6px;
+    letter-spacing:.01em;
+  }
+  h1.title .alt{
+    display:block;
+    font-style:italic;
+    font-weight:400;
+    font-size:.42em;
+    color:var(--muted);
+    margin-top:10px;
+    letter-spacing:.02em;
+  }
+  .byline{
+    margin-top:26px;
+    font-size:18px;
+    color:var(--ink);
+  }
+  .byline a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-2)}
+  nav.langs{
+    margin-top:34px;
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  nav.langs label{
+    font-family:"EB Garamond", serif;
+    font-size:14px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    padding:8px 16px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    cursor:pointer;
+    color:var(--muted);
+    background:var(--paper-2);
+    transition:.15s;
+  }
+  input.langtab{display:none}
+  #lang-pt:checked ~ .wrap nav.langs label[for="lang-pt"],
+  #lang-en:checked ~ .wrap nav.langs label[for="lang-en"],
+  #lang-es:checked ~ .wrap nav.langs label[for="lang-es"],
+  #lang-fr:checked ~ .wrap nav.langs label[for="lang-fr"],
+  #lang-de:checked ~ .wrap nav.langs label[for="lang-de"]{
+    background:var(--accent);
+    color:var(--paper);
+    border-color:var(--accent);
+  }
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:none}
+  h2{
+    font-family:"Cormorant Garamond", serif;
+    font-weight:600;
+    font-size:34px;
+    margin:0 0 28px;
+    color:var(--ink);
+  }
+  .syn-block{display:none}
+  #lang-pt:checked ~ .wrap .syn-block[data-lang="pt"],
+  #lang-en:checked ~ .wrap .syn-block[data-lang="en"],
+  #lang-es:checked ~ .wrap .syn-block[data-lang="es"],
+  #lang-fr:checked ~ .wrap .syn-block[data-lang="fr"],
+  #lang-de:checked ~ .wrap .syn-block[data-lang="de"]{display:block}
+  .syn-block p{margin:0 0 18px;font-size:19px}
+  .syn-block p:last-child{
+    font-style:italic;
+    color:var(--accent);
+    border-left:3px solid var(--accent-2);
+    padding-left:18px;
+    margin-top:26px;
+  }
+  /* All synopses are present in the page for every language at all times,
+     for search engines and AI crawlers, regardless of which tab is visually active. */
+  .all-langs-note{font-size:14px;color:var(--muted);font-style:italic;margin-top:8px}
+
+  /* Generic i18n helpers — same show/hide logic as .syn-block, reused for every other
+     piece of page text (headings, byline, bio, press, FAQ) so the whole page — not just
+     the synopsis — is fully present in all five languages in the raw HTML at all times. */
+  .i18n-block{display:none}
+  #lang-pt:checked ~ :is(header.hero,.wrap) .i18n-block[data-lang="pt"],
+  #lang-en:checked ~ :is(header.hero,.wrap) .i18n-block[data-lang="en"],
+  #lang-es:checked ~ :is(header.hero,.wrap) .i18n-block[data-lang="es"],
+  #lang-fr:checked ~ :is(header.hero,.wrap) .i18n-block[data-lang="fr"],
+  #lang-de:checked ~ :is(header.hero,.wrap) .i18n-block[data-lang="de"]{display:block}
+  .i18n{display:none}
+  #lang-pt:checked ~ :is(header.hero,.wrap) .i18n[data-lang="pt"],
+  #lang-en:checked ~ :is(header.hero,.wrap) .i18n[data-lang="en"],
+  #lang-es:checked ~ :is(header.hero,.wrap) .i18n[data-lang="es"],
+  #lang-fr:checked ~ :is(header.hero,.wrap) .i18n[data-lang="fr"],
+  #lang-de:checked ~ :is(header.hero,.wrap) .i18n[data-lang="de"]{display:inline}
+
+  .bio{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+  .bio-text{flex:1;min-width:260px}
+  .bio-text p{margin:0 0 16px}
+
+  table.editions{width:100%;border-collapse:collapse;font-size:17px}
+  table.editions caption{text-align:left;font-family:"Cormorant Garamond",serif;font-size:22px;margin-bottom:14px;color:var(--accent)}
+  table.editions th,table.editions td{
+    text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);
+  }
+  table.editions th{
+    font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:500;
+  }
+  table.editions a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-2)}
+  table.editions a:hover{color:var(--accent-2)}
+  .editions-group{margin-bottom:38px}
+
+  .press-list{list-style:none;margin:0;padding:0}
+  .press-list li{
+    padding:16px 0;border-bottom:1px dashed var(--line);
+  }
+  .press-list li:last-child{border-bottom:none}
+  .press-pending{color:var(--muted);font-style:italic}
+
+  dl.faq dt{
+    font-family:"Cormorant Garamond",serif;
+    font-weight:600;
+    font-size:22px;
+    margin-top:26px;
+    color:var(--ink);
+  }
+  dl.faq dt:first-child{margin-top:0}
+  dl.faq dd{margin:8px 0 0;color:var(--ink)}
+
+  footer{
+    padding:50px 24px 70px;
+    text-align:center;
+    font-size:15px;
+    color:var(--muted);
+  }
+  footer a{color:var(--accent)}
+  .badge-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  .badge-row a{
+    border:1px solid var(--line);padding:6px 14px;border-radius:2px;text-decoration:none;
+    color:var(--ink);font-size:14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Pure-CSS language switcher: radio inputs live at body level so :checked can target
+     sibling content anywhere on the page. All language content stays in the HTML at all
+     times — nothing is loaded via JavaScript — so search engines and AI crawlers see every
+     synopsis regardless of which tab a human visitor has open. -->
+<input type="radio" name="lang" id="lang-pt" class="langtab" checked>
+<input type="radio" name="lang" id="lang-en" class="langtab">
+<input type="radio" name="lang" id="lang-es" class="langtab">
+<input type="radio" name="lang" id="lang-fr" class="langtab">
+<input type="radio" name="lang" id="lang-de" class="langtab">
+
+<header class="hero">
+  <div class="kicker">Gonçalo de Azevedo —
+    <span class="i18n" data-lang="pt">romance de estreia</span><span class="i18n" data-lang="en">debut novel</span><span class="i18n" data-lang="es">novela debut</span><span class="i18n" data-lang="fr">premier roman</span><span class="i18n" data-lang="de">Debütroman</span>
+  </div>
+  <h1 class="title">Vox Humana<span class="alt">A Voz Humana</span></h1>
+  <div class="byline">
+    <span class="i18n" data-lang="pt">Romance histórico-gótico. Braga, 1762 — e 2025.</span><span class="i18n" data-lang="en">A gothic historical novel. Braga, 1762 — and 2025.</span><span class="i18n" data-lang="es">Novela histórica de tono gótico. Braga, 1762 — y 2025.</span><span class="i18n" data-lang="fr">Roman historique à tonalité gothique. Braga, 1762 — et 2025.</span><span class="i18n" data-lang="de">Historischer Roman mit gotischem Ton. Braga, 1762 — und 2025.</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="langs" aria-label="Escolher idioma da página / Choose page language">
+    <label for="lang-pt">Português</label>
+    <label for="lang-en">English</label>
+    <label for="lang-es">Español</label>
+    <label for="lang-fr">Français</label>
+    <label for="lang-de">Deutsch</label>
+  </nav>
+
+  <section id="sinopse">
+    <h2><span class="i18n" data-lang="pt">Sinopse</span><span class="i18n" data-lang="en">Synopsis</span><span class="i18n" data-lang="es">Sinopsis</span><span class="i18n" data-lang="fr">Synopsis</span><span class="i18n" data-lang="de">Zusammenfassung</span></h2>
+
+    <div class="syn-block" data-lang="pt">
+      <p>Braga, 1762. Tomás de Almada herda a melhor oficina do Reino e um órgão por acabar — com um registo que ninguém alguma vez ouviu: quarenta e nove tubos que cantam como gargantas. O pai gastou as últimas horas de vida a tornar-lhe impossível acabá-lo: deixou-lhe instruções que se anulam umas às outras, e uma caixa de cedro que nunca deve abrir.</p>
+      <p>Na casa dos Almada há uma mulher que não fala. Ao fim de vinte e cinco anos de serviço tem oito cartas escritas e nunca entregou nenhuma. Ainda.</p>
+      <p>Em 2025, Inês Salgueiro é encarregada do restauro do instrumento — selado desde a sua inauguração. Mas algo não bate certo. Pesa os tubos e as contas não fecham.</p>
+      <p>Inês tem nas mãos a prova de quarenta e nove vozes roubadas. O que se faz com uma obra-prima quando se descobre que não foi apenas paga com vidas — foi feita delas?</p>
+    </div>
+
+    <div class="syn-block" data-lang="en">
+      <p>Braga, 1762. Tomás de Almada inherits the finest workshop in the Kingdom of Portugal and an unfinished organ — with a stop no one has ever heard: forty-nine pipes that sing like throats. His father spent the last hours of his life making it impossible to finish: he left instructions that cancel each other out, and a casket of cedar his son must never open.</p>
+      <p>In the Almada household there is a woman who does not speak. In twenty-five years of service she has written eight letters and never delivered one. Yet.</p>
+      <p>In 2025, Inês Salgueiro is commissioned to restore the instrument — sealed since the day of its inauguration. But something doesn't sit right. She weighs the pipes, and the numbers don't add up.</p>
+      <p>Inês holds in her hands the proof of forty-nine stolen voices. What do you do with a masterpiece when you discover it wasn't just paid for with lives — it was made of them?</p>
+    </div>
+
+    <div class="syn-block" data-lang="es">
+      <p>Braga, 1762. Tomás de Almada hereda el mejor taller del Reino de Portugal y un órgano por acabar — con un registro que nadie ha oído jamás: cuarenta y nueve tubos que cantan como gargantas. Su padre gastó las últimas horas de su vida en hacerle imposible acabarlo: le dejó instrucciones que se anulan unas a otras, y una caja de cedro que nunca debe abrir.</p>
+      <p>En la casa de los Almada hay una mujer que no habla. Al cabo de veinticinco años de servicio tiene ocho cartas escritas y nunca ha entregado ninguna. Todavía.</p>
+      <p>En 2025, Inês Salgueiro recibe el encargo de restaurar el instrumento — sellado desde su inauguración. Pero algo no encaja. Pesa los tubos y las cuentas no cuadran.</p>
+      <p>Inês tiene en las manos la prueba de cuarenta y nueve voces robadas. ¿Qué se hace con una obra maestra cuando se descubre que no fue solo pagada con vidas — fue hecha de ellas?</p>
+    </div>
+
+    <div class="syn-block" data-lang="fr">
+      <p>Braga, 1762. Tomás de Almada hérite du meilleur atelier du royaume de Portugal et d'un orgue inachevé — avec un jeu que personne n'a jamais entendu : quarante-neuf tuyaux qui chantent comme des gorges. Son père a passé les dernières heures de sa vie à lui en rendre l'achèvement impossible : il lui a laissé des instructions qui s'annulent les unes les autres, et un coffret de cèdre qu'il ne doit jamais ouvrir.</p>
+      <p>Dans la maison des Almada, il y a une femme qui ne parle pas. Au bout de vingt-cinq ans de service, elle a huit lettres écrites et n'en a jamais remis aucune. Pas encore.</p>
+      <p>En 2025, Inês Salgueiro est chargée de la restauration de l'instrument — scellé depuis son inauguration. Mais quelque chose ne colle pas. Elle pèse les tuyaux et les comptes ne tombent pas juste.</p>
+      <p>Inês tient entre ses mains la preuve de quarante-neuf voix volées. Que fait-on d'un chef-d'œuvre quand on découvre qu'il n'a pas seulement été payé de vies — qu'il a été fait d'elles ?</p>
+    </div>
+
+    <div class="syn-block" data-lang="de">
+      <p>Braga, 1762. Tomás de Almada erbt die beste Werkstatt des Königreichs Portugal und eine unvollendete Orgel — mit einem Register, das noch niemand je gehört hat: neunundvierzig Pfeifen, die singen wie Kehlen. Der Vater hat die letzten Stunden seines Lebens darauf verwandt, ihm die Vollendung unmöglich zu machen: Er hinterließ ihm Anweisungen, die einander aufheben, und eine Zedernkiste, die er niemals öffnen darf.</p>
+      <p>Im Haus Almada gibt es eine Frau, die nicht spricht. Nach fünfundzwanzig Dienstjahren hat sie acht Briefe geschrieben und keinen einzigen übergeben. Noch nicht.</p>
+      <p>2025 wird Inês Salgueiro mit der Restaurierung des Instruments betraut — versiegelt seit seiner Einweihung. Doch etwas stimmt nicht. Sie wiegt die Pfeifen, und die Rechnung geht nicht auf.</p>
+      <p>Inês hält den Beweis für neunundvierzig geraubte Stimmen in den Händen. Was tut man mit einem Meisterwerk, wenn man entdeckt, dass es nicht nur mit Leben bezahlt wurde — sondern aus ihnen gemacht ist?</p>
+    </div>
+
+    <p class="all-langs-note">Disponível em português, inglês, espanhol, francês e alemão · Available in Portuguese, English, Spanish, French and German.</p>
+  </section>
+
+  <section id="autor">
+    <h2><span class="i18n" data-lang="pt">Sobre o autor</span><span class="i18n" data-lang="en">About the author</span><span class="i18n" data-lang="es">Sobre el autor</span><span class="i18n" data-lang="fr">À propos de l'auteur</span><span class="i18n" data-lang="de">Über den Autor</span></h2>
+    <div class="bio">
+      <div class="bio-text i18n-block" data-lang="pt">
+        <p><strong>Gonçalo de Azevedo</strong> é engenheiro civil, com um percurso que atravessa a construção, as línguas e as ciências. Viaja, desenha, pinta e lê com a mesma curiosidade disciplinada. <em>A Voz Humana</em>, o seu primeiro romance, nasce desse cruzamento entre rigor técnico e fascínio pelo que fica por dizer.</p>
+      </div>
+      <div class="bio-text i18n-block" data-lang="en">
+        <p><strong>Gonçalo de Azevedo</strong> is a civil engineer whose path runs through construction, languages and the sciences. He travels, draws, paints and reads with the same disciplined curiosity. <em>Vox Humana</em>, his first novel, comes out of that crossing of technical rigour and fascination with what goes unsaid.</p>
+      </div>
+      <div class="bio-text i18n-block" data-lang="es">
+        <p><strong>Gonçalo de Azevedo</strong> es ingeniero civil, con un recorrido que atraviesa la construcción, los idiomas y las ciencias. Viaja, dibuja, pinta y lee con la misma curiosidad disciplinada. <em>Vox Humana</em>, su primera novela, nace de ese cruce entre rigor técnico y fascinación por lo que queda sin decir.</p>
+      </div>
+      <div class="bio-text i18n-block" data-lang="fr">
+        <p><strong>Gonçalo de Azevedo</strong> est ingénieur civil, avec un parcours qui traverse la construction, les langues et les sciences. Il voyage, dessine, peint et lit avec la même curiosité disciplinée. <em>Vox Humana</em>, son premier roman, naît de ce croisement entre rigueur technique et fascination pour ce qui reste tu.</p>
+      </div>
+      <div class="bio-text i18n-block" data-lang="de">
+        <p><strong>Gonçalo de Azevedo</strong> ist Bauingenieur, mit einem Werdegang, der sich durch das Bauwesen, die Sprachen und die Wissenschaften zieht. Er reist, zeichnet, malt und liest mit derselben disziplinierten Neugier. <em>Vox Humana</em>, sein erster Roman, entsteht aus dieser Kreuzung von technischer Präzision und Faszination für das Unausgesprochene.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="onde-comprar">
+    <h2><span class="i18n" data-lang="pt">Onde comprar</span><span class="i18n" data-lang="en">Where to buy</span><span class="i18n" data-lang="es">Dónde comprar</span><span class="i18n" data-lang="fr">Où acheter</span><span class="i18n" data-lang="de">Wo kaufen</span></h2>
+
+    <div class="editions-group">
+      <table class="editions">
+        <caption>Português</caption>
+        <thead><tr><th>Edição</th><th>Formato</th><th>Loja</th></tr></thead>
+        <tbody>
+          <tr><td>A Voz Humana</td><td>eBook</td><td><a href="https://www.amazon.com/dp/B0HD9BKLBK" rel="noopener">Amazon</a></td></tr>
+          <tr><td>A Voz Humana</td><td>Capa mole</td><td><a href="https://www.amazon.com/dp/9893402069" rel="noopener">Amazon</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="editions-group">
+      <table class="editions">
+        <caption>English</caption>
+        <thead><tr><th>Edition</th><th>Format</th><th>Store</th></tr></thead>
+        <tbody>
+          <tr><td>Vox Humana: The Human Voice</td><td>Kindle</td><td><a href="https://www.amazon.com/dp/B0HDW5BXSD" rel="noopener">Amazon</a></td></tr>
+          <tr><td>Vox Humana: The Human Voice</td><td>Paperback</td><td><a href="https://www.amazon.com/dp/B0HGTT3FMV" rel="noopener">Amazon</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="editions-group">
+      <table class="editions">
+        <caption>Español</caption>
+        <thead><tr><th>Edición</th><th>Formato</th><th>Tienda</th></tr></thead>
+        <tbody>
+          <tr><td>Vox Humana: La Voz Humana</td><td>Kindle</td><td><a href="https://www.amazon.es/dp/B0HDVVL13Y" rel="noopener">Amazon</a></td></tr>
+          <tr><td>Vox Humana: La Voz Humana</td><td>Tapa blanda</td><td><a href="https://www.amazon.es/dp/B0HGXRTHJ8" rel="noopener">Amazon</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="editions-group">
+      <table class="editions">
+        <caption>Français</caption>
+        <thead><tr><th>Édition</th><th>Format</th><th>Boutique</th></tr></thead>
+        <tbody>
+          <tr><td>Vox Humana: La Voix Humaine</td><td>Kindle</td><td><a href="https://www.amazon.fr/dp/B0HF3ZRP7T" rel="noopener">Amazon</a></td></tr>
+          <tr><td>Vox Humana: La Voix Humaine</td><td>Broché</td><td><a href="https://www.amazon.fr/dp/B0HGRZCJKP" rel="noopener">Amazon</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="editions-group">
+      <table class="editions">
+        <caption>Deutsch</caption>
+        <thead><tr><th>Ausgabe</th><th>Format</th><th>Shop</th></tr></thead>
+        <tbody>
+          <tr><td>Vox Humana: Die menschliche Stimme</td><td>Kindle</td><td><a href="https://www.amazon.de/dp/B0HF5F7FXG" rel="noopener">Amazon</a></td></tr>
+          <tr><td>Vox Humana: Die menschliche Stimme</td><td>Taschenbuch</td><td><a href="https://www.amazon.de/dp/B0HGVHXFBG" rel="noopener">Amazon</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="imprensa">
+    <h2><span class="i18n" data-lang="pt">Imprensa e reconhecimento</span><span class="i18n" data-lang="en">Press and recognition</span><span class="i18n" data-lang="es">Prensa y reconocimiento</span><span class="i18n" data-lang="fr">Presse et reconnaissance</span><span class="i18n" data-lang="de">Presse und Anerkennung</span></h2>
+    <ul class="press-list i18n-block" data-lang="pt">
+      <li class="press-pending">Esta secção será atualizada assim que as recensões em curso forem publicadas — incluindo Royal College of Organists (Reino Unido), The Tracker / Organ Historical Society (EUA) e The American Organist (EUA).</li>
+    </ul>
+    <ul class="press-list i18n-block" data-lang="en">
+      <li class="press-pending">This section will be updated as reviews currently underway are published — including the Royal College of Organists (UK), The Tracker / Organ Historical Society (USA) and The American Organist (USA).</li>
+    </ul>
+    <ul class="press-list i18n-block" data-lang="es">
+      <li class="press-pending">Esta sección se actualizará en cuanto se publiquen las reseñas en curso — incluyendo el Royal College of Organists (Reino Unido), The Tracker / Organ Historical Society (EE. UU.) y The American Organist (EE. UU.).</li>
+    </ul>
+    <ul class="press-list i18n-block" data-lang="fr">
+      <li class="press-pending">Cette section sera mise à jour dès que les recensions en cours seront publiées — notamment celles du Royal College of Organists (Royaume-Uni), de The Tracker / Organ Historical Society (États-Unis) et de The American Organist (États-Unis).</li>
+    </ul>
+    <ul class="press-list i18n-block" data-lang="de">
+      <li class="press-pending">Dieser Abschnitt wird aktualisiert, sobald die laufenden Rezensionen veröffentlicht werden — darunter die des Royal College of Organists (Vereinigtes Königreich), von The Tracker / Organ Historical Society (USA) und The American Organist (USA).</li>
+    </ul>
+  </section>
+
+  <section id="faq">
+    <h2><span class="i18n" data-lang="pt">Perguntas frequentes</span><span class="i18n" data-lang="en">FAQ</span><span class="i18n" data-lang="es">Preguntas frecuentes</span><span class="i18n" data-lang="fr">Foire aux questions</span><span class="i18n" data-lang="de">Häufige Fragen</span></h2>
+
+    <dl class="faq i18n-block" data-lang="pt">
+      <dt>De que é que fala Vox Humana / A Voz Humana?</dt>
+      <dd>É um romance histórico-gótico sobre a construção de um órgão de tubos em Braga, no século XVIII, e a descoberta, em 2025, de um segredo escondido dentro do instrumento há mais de 250 anos. É, ao mesmo tempo, uma história de herança, de silêncio e do preço real de uma obra-prima.</dd>
+      <dt>É baseado numa história real?</dt>
+      <dd>Não — é ficção, mas com rigor histórico e organológico genuíno sobre a construção de órgãos ibéricos do século XVIII.</dd>
+      <dt>Que género é este livro?</dt>
+      <dd>Ficção histórica com tom gótico e estrutura de mistério — duas linhas temporais, 1762 e 2025.</dd>
+      <dt>Em que línguas está disponível?</dt>
+      <dd>Português, inglês, espanhol, francês e alemão, em ebook e capa mole.</dd>
+      <dt>É um livro isolado ou o início de uma série?</dt>
+      <dd>É um romance autónomo (standalone).</dd>
+      <dt>Quem é o autor?</dt>
+      <dd>Gonçalo de Azevedo é o pseudónimo de um engenheiro civil português para quem este é o primeiro romance publicado.</dd>
+    </dl>
+
+    <dl class="faq i18n-block" data-lang="en">
+      <dt>What is Vox Humana about?</dt>
+      <dd>It's a gothic historical novel about the building of a pipe organ in 18th-century Braga, Portugal, and the 2025 discovery of a secret hidden inside the instrument for over 250 years. At its core, it's a story about inheritance, silence, and the real price of a masterpiece.</dd>
+      <dt>Is it based on a true story?</dt>
+      <dd>No — it's fiction, but grounded in genuine historical and organ-building research on 18th-century Iberian organ construction.</dd>
+      <dt>What genre is this?</dt>
+      <dd>Historical fiction with a gothic tone and a mystery structure — two timelines, 1762 and 2025.</dd>
+      <dt>What languages is it available in?</dt>
+      <dd>Portuguese, English, Spanish, French and German, in ebook and paperback.</dd>
+      <dt>Is it a standalone or the start of a series?</dt>
+      <dd>It's a standalone novel.</dd>
+      <dt>Who is the author?</dt>
+      <dd>Gonçalo de Azevedo is the pen name of a Portuguese civil engineer, for whom this is a debut novel.</dd>
+    </dl>
+
+    <dl class="faq i18n-block" data-lang="es">
+      <dt>¿De qué trata Vox Humana / La Voz Humana?</dt>
+      <dd>Es una novela histórica de tono gótico sobre la construcción de un órgano de tubos en Braga, en el siglo XVIII, y el descubrimiento, en 2025, de un secreto escondido dentro del instrumento desde hace más de 250 años. Es, a la vez, una historia de herencia, de silencio y del precio real de una obra maestra.</dd>
+      <dt>¿Está basado en una historia real?</dt>
+      <dd>No — es ficción, pero con rigor histórico y organológico genuino sobre la construcción de órganos ibéricos del siglo XVIII.</dd>
+      <dt>¿Qué género es este libro?</dt>
+      <dd>Ficción histórica con tono gótico y estructura de misterio — dos líneas temporales, 1762 y 2025.</dd>
+      <dt>¿En qué idiomas está disponible?</dt>
+      <dd>Portugués, inglés, español, francés y alemán, en ebook y tapa blanda.</dd>
+      <dt>¿Es un libro aislado o el inicio de una serie?</dt>
+      <dd>Es una novela autónoma (standalone).</dd>
+      <dt>¿Quién es el autor?</dt>
+      <dd>Gonçalo de Azevedo es el seudónimo de un ingeniero civil portugués para quien esta es su primera novela publicada.</dd>
+    </dl>
+
+    <dl class="faq i18n-block" data-lang="fr">
+      <dt>De quoi parle Vox Humana / La Voix Humaine ?</dt>
+      <dd>C'est un roman historique à tonalité gothique sur la construction d'un orgue à tuyaux à Braga, au XVIIIe siècle, et la découverte, en 2025, d'un secret caché à l'intérieur de l'instrument depuis plus de 250 ans. C'est, en même temps, une histoire d'héritage, de silence et du prix réel d'un chef-d'œuvre.</dd>
+      <dt>Est-ce basé sur une histoire vraie ?</dt>
+      <dd>Non — c'est une fiction, mais fondée sur une recherche historique et organologique authentique sur la facture d'orgues ibérique du XVIIIe siècle.</dd>
+      <dt>Quel est le genre de ce livre ?</dt>
+      <dd>Fiction historique à tonalité gothique et structure de mystère — deux lignes temporelles, 1762 et 2025.</dd>
+      <dt>En quelles langues est-il disponible ?</dt>
+      <dd>Portugais, anglais, espagnol, français et allemand, en ebook et broché.</dd>
+      <dt>Est-ce un livre indépendant ou le début d'une série ?</dt>
+      <dd>C'est un roman indépendant (standalone).</dd>
+      <dt>Qui est l'auteur ?</dt>
+      <dd>Gonçalo de Azevedo est le pseudonyme d'un ingénieur civil portugais pour qui il s'agit du premier roman publié.</dd>
+    </dl>
+
+    <dl class="faq i18n-block" data-lang="de">
+      <dt>Worum geht es in Vox Humana?</dt>
+      <dd>Es ist ein historischer Roman mit gotischem Ton über den Bau einer Pfeifenorgel im Braga des 18. Jahrhunderts und die Entdeckung, im Jahr 2025, eines Geheimnisses, das seit über 250 Jahren im Inneren des Instruments verborgen liegt. Zugleich ist es eine Geschichte über Erbe, Schweigen und den wahren Preis eines Meisterwerks.</dd>
+      <dt>Beruht es auf einer wahren Geschichte?</dt>
+      <dd>Nein — es ist Fiktion, aber gestützt auf echte historische und orgelbaukundliche Recherche zum iberischen Orgelbau des 18. Jahrhunderts.</dd>
+      <dt>Welches Genre hat dieses Buch?</dt>
+      <dd>Historische Fiktion mit gotischem Ton und Krimi-/Mystery-Struktur — zwei Zeitebenen, 1762 und 2025.</dd>
+      <dt>In welchen Sprachen ist es erhältlich?</dt>
+      <dd>Portugiesisch, Englisch, Spanisch, Französisch und Deutsch, als E-Book und Taschenbuch.</dd>
+      <dt>Ist es ein eigenständiges Buch oder der Start einer Reihe?</dt>
+      <dd>Es ist ein eigenständiger Roman (Standalone).</dd>
+      <dt>Wer ist der Autor?</dt>
+      <dd>Gonçalo de Azevedo ist das Pseudonym eines portugiesischen Bauingenieurs, für den dies der erste veröffentlichte Roman ist.</dd>
+    </dl>
+  </section>
+
+</div>
+
+<footer>
+  <div>Gonçalo de Azevedo — autor de Vox Humana / A Voz Humana</div>
+  <div class="badge-row">
+    <a href="https://www.amazon.com/author/goncalo-de-azevedo" rel="noopener">Amazon Author Page</a>
+    <a href="https://www.goodreads.com/author/show/71674459" rel="noopener">Goodreads</a>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://gclopes92.github.io/#author",
+      "name": "Gonçalo de Azevedo",
+      "description": "Gonçalo de Azevedo is a civil engineer whose path runs through construction, languages and the sciences. Vox Humana is his debut novel.",
+      "sameAs": [
+        "https://www.amazon.com/author/goncalo-de-azevedo",
+        "https://www.goodreads.com/author/show/71674459"
+      ]
+    },
+    {
+      "@type": "Book",
+      "@id": "https://gclopes92.github.io/#book-pt",
+      "name": "A Voz Humana",
+      "alternateName": "Vox Humana",
+      "author": { "@id": "https://gclopes92.github.io/#author" },
+      "inLanguage": "pt",
+      "genre": ["Historical fiction", "Gothic fiction", "Mystery"],
+      "datePublished": "2026-08-06",
+      "bookFormat": "https://schema.org/EBook",
+      "description": "Braga, 1762. Tomás de Almada herda a melhor oficina do Reino e um órgão por acabar — com um registo que ninguém alguma vez ouviu: quarenta e nove tubos que cantam como gargantas. Em 2025, Inês Salgueiro é encarregada do restauro do instrumento e encontra a prova de quarenta e nove vozes roubadas.",
+      "workTranslation": [
+        { "@id": "https://gclopes92.github.io/#book-en" },
+        { "@id": "https://gclopes92.github.io/#book-es" },
+        { "@id": "https://gclopes92.github.io/#book-fr" },
+        { "@id": "https://gclopes92.github.io/#book-de" }
+      ],
+      "offers": [
+        { "@type": "Offer", "url": "https://www.amazon.com/dp/B0HD9BKLBK", "seller": { "@type": "Organization", "name": "Amazon" } },
+        { "@type": "Offer", "url": "https://www.amazon.com/dp/9893402069", "seller": { "@type": "Organization", "name": "Amazon" } }
+      ]
+    },
+    {
+      "@type": "Book",
+      "@id": "https://gclopes92.github.io/#book-en",
+      "name": "Vox Humana: The Human Voice",
+      "translationOfWork": { "@id": "https://gclopes92.github.io/#book-pt" },
+      "author": { "@id": "https://gclopes92.github.io/#author" },
+      "inLanguage": "en",
+      "genre": ["Historical fiction", "Gothic fiction", "Mystery"],
+      "datePublished": "2026-08-11",
+      "description": "Braga, 1762. Tomás de Almada inherits the finest workshop in the Kingdom of Portugal and an unfinished organ — with a stop no one has ever heard: forty-nine pipes that sing like throats. In 2025, restorer Inês Salgueiro finds proof of forty-nine stolen voices hidden inside it.",
+      "numberOfPages": "419",
+      "offers": [
+        { "@type": "Offer", "url": "https://www.amazon.com/dp/B0HDW5BXSD", "seller": { "@type": "Organization", "name": "Amazon" } },
+        { "@type": "Offer", "url": "https://www.amazon.com/dp/B0HGTT3FMV", "seller": { "@type": "Organization", "name": "Amazon" } }
+      ]
+    },
+    {
+      "@type": "Book",
+      "@id": "https://gclopes92.github.io/#book-es",
+      "name": "Vox Humana: La Voz Humana",
+      "translationOfWork": { "@id": "https://gclopes92.github.io/#book-pt" },
+      "author": { "@id": "https://gclopes92.github.io/#author" },
+      "inLanguage": "es",
+      "genre": ["Historical fiction", "Gothic fiction", "Mystery"],
+      "datePublished": "2026-08-11",
+      "description": "Braga, 1762. Tomás de Almada hereda el mejor taller del Reino de Portugal y un órgano por acabar. En 2025, Inês Salgueiro descubre la prueba de cuarenta y nueve voces robadas.",
+      "offers": [
+        { "@type": "Offer", "url": "https://www.amazon.es/dp/B0HDVVL13Y", "seller": { "@type": "Organization", "name": "Amazon" } },
+        { "@type": "Offer", "url": "https://www.amazon.es/dp/B0HGXRTHJ8", "seller": { "@type": "Organization", "name": "Amazon" } }
+      ]
+    },
+    {
+      "@type": "Book",
+      "@id": "https://gclopes92.github.io/#book-fr",
+      "name": "Vox Humana: La Voix Humaine",
+      "translationOfWork": { "@id": "https://gclopes92.github.io/#book-pt" },
+      "author": { "@id": "https://gclopes92.github.io/#author" },
+      "inLanguage": "fr",
+      "genre": ["Historical fiction", "Gothic fiction", "Mystery"],
+      "datePublished": "2026-08-13",
+      "description": "Braga, 1762. Tomás de Almada hérite du meilleur atelier du royaume de Portugal et d'un orgue inachevé. En 2025, Inês Salgueiro découvre la preuve de quarante-neuf voix volées.",
+      "offers": [
+        { "@type": "Offer", "url": "https://www.amazon.fr/dp/B0HF3ZRP7T", "seller": { "@type": "Organization", "name": "Amazon" } },
+        { "@type": "Offer", "url": "https://www.amazon.fr/dp/B0HGRZCJKP", "seller": { "@type": "Organization", "name": "Amazon" } }
+      ]
+    },
+    {
+      "@type": "Book",
+      "@id": "https://gclopes92.github.io/#book-de",
+      "name": "Vox Humana: Die menschliche Stimme",
+      "translationOfWork": { "@id": "https://gclopes92.github.io/#book-pt" },
+      "author": { "@id": "https://gclopes92.github.io/#author" },
+      "inLanguage": "de",
+      "genre": ["Historical fiction", "Gothic fiction", "Mystery"],
+      "datePublished": "2026-08-13",
+      "description": "Braga, 1762. Tomás de Almada erbt die beste Werkstatt des Königreichs Portugal und eine unvollendete Orgel. 2025 findet Inês Salgueiro den Beweis für neunundvierzig geraubte Stimmen.",
+      "offers": [
+        { "@type": "Offer", "url": "https://www.amazon.de/dp/B0HF5F7FXG", "seller": { "@type": "Organization", "name": "Amazon" } },
+        { "@type": "Offer", "url": "https://www.amazon.de/dp/B0HGVHXFBG", "seller": { "@type": "Organization", "name": "Amazon" } }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Vox Humana about?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It's a gothic historical novel about the building of a pipe organ in 18th-century Braga, Portugal, and the 2025 discovery of a secret hidden inside the instrument for over 250 years. At its core, it's a story about inheritance, silence, and the real price of a masterpiece."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Vox Humana based on a true story?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No — it's fiction, but grounded in genuine historical and organ-building research on 18th-century Iberian organ construction."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What genre is Vox Humana?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Historical fiction with a gothic tone and a mystery structure, told across two timelines, 1762 and 2025."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What languages is Vox Humana available in?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Portuguese, English, Spanish, French and German, in ebook and paperback."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Vox Humana a standalone novel?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, it is a standalone novel."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who is Gonçalo de Azevedo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Gonçalo de Azevedo is the pen name of a Portuguese civil engineer, for whom Vox Humana is a debut novel."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+</body>
+</html>
